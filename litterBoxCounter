@@ -1,0 +1,51 @@
+//Simple LCD counter program attached to a sensor. Made as a thought to count the number of times my cat uses her litter box
+//(it's the enclosed kind with a lid so attaching a kind of motion sensor to the lid would get an accurate count unless she enters for the fun of it)
+//I didn't end up using it cuz when I had it on my desk she tried to bite the cables so I didn't think it was smart to lay it on top of her litter box
+//I'm going to go overboard on the comments so I can relearn easily if I come back after a few years
+
+
+#include <LiquidCrystal.h> 
+
+const int rs = 12, en = 11, d4 = 7, d5 = 6, d6 = 5, d7 = 4; //define the pins to be used for the LCD screen
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7); //enable the LCD screen with the defined pins
+const int  motionPin   = 2; //sensor reading pin
+
+int litterCounter = 0; //counter for the number of button presses
+int motionState = 0; //current state of the sensor (I used an HC-SR501 at first then found a tilt sensor and used that)
+int motionStateLast = 0; //previous state of the sensor
+bool motion = false; //if the state of the sensor changed
+//thought about adding a reset button then remembered the Arduino comes with one built in
+
+void setup(){
+  pinMode( motionPin , INPUT); //set mode for the sensor pin
+  lcd.begin(16, 2); //starts LCD in the parameters of the screen plugged in (16x2 in this case)
+  lcd.setCursor(0, 0);  //curser starts at 0x,0y (top left)
+  lcd.print("Times Used:"); //prints the arg
+  lcd.setCursor(2, 1);
+  lcd.print(litterCounter);
+}
+
+void loop(){ 
+  checkMove(); //constantly check for movement
+  if (motion){
+    motion = false;
+    lcd.setCursor(2, 1);
+    lcd.print("               "); //"erase" last line and write the new number
+    lcd.setCursor(2, 1);
+    lcd.print(litterCounter);
+    delay(120000); // wait a bit (2 minutes) so it wont count on the way out
+  }
+}
+
+void checkMove(){ //method to check for movement
+  motionState = digitalRead(motionPin);
+  if (motionState != motionStateLast)    // compare the tilt to its previous state
+  {
+    if (motionState == HIGH)   // if the state changed move the counter
+    {
+      motion = true;  // if the current state is HIGH then the sensor sensed movement (change in tilt angle)
+      litterCounter++;
+    }
+  }
+  motionStateLast = motionState;   // save the current state so we know if it changed
+}
