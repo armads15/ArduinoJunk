@@ -1,7 +1,6 @@
 //Simple LCD counter program attached to a sensor. Made as a thought to count the number of times my cat uses her litter box
 //(it's the enclosed kind with a lid so attaching a kind of motion sensor to the lid would get an accurate count unless she enters for the fun of it)
-//I didn't end up using it cuz when I had it on my desk she tried to bite the cables so I didn't think it was smart to lay it on top of her litter box
-//I'm going to go overboard on the comments so I can relearn easily if I come back after a few years
+//I didn't end up using it because when I had it on my desk she tried to bite the cables so I didn't think it was smart to lay it on top of her litter box
 
 
 #include <LiquidCrystal.h> 
